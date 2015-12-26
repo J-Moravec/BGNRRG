@@ -16,7 +16,7 @@ and follow instruction.
 
 Now, you can type (while still on Abilities screen of Character Creation):
 ```
-pyton BGNRRG.py
+python BGNRRG.py
 ```
 and enjoy your highest roll. You can further specify delay, language (by default, bgee2 is used), number of rolls (by default 100 rolls) and verbose output. Simply write ```python BGNRRG.py -h``` and read help.
 
