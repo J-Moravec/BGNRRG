@@ -73,6 +73,8 @@ def create_setting():
     
     setting_dict["total_roll"] = \
         setting_dict[top_left] + setting_dict[bottom_right]
+    del(setting_dict[top_left])
+    del(setting_dict[bottom_right])
     print("done!")
     return(setting_dict)
 
