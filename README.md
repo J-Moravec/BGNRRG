@@ -6,7 +6,7 @@
 First, copy bgee.traineddata and bgee2.traineddata to your tessdata folder:
 * Linux: ```/usr/share/tesseract-ocr/tessdata``` or ```/usr/share/tessdata``` 
 * Windows: ```C:\Program Files\Tesseract OCR\tessdata```
-* Mac: Tesseract page is unclear on this. If some Mac user knows, please contact me.
+* Mac: Tesseract page is unclear on this. According to [bknowles](https://github.com/bknowles), it is: ```/usr/local/Cellar/tesseract/<version>/share/tessdata/```
 
 Then you need to initialize positions for buttons and area of totall roll. Run Baldur's Gate: Enhanced edition, go to character creation, abilities, then run terminal and write:
 ```

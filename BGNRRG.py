@@ -40,6 +40,14 @@ def read_setting():
     return(setting_dict)
 
 
+def add_to_dict(mouse, set_dict, what, message=None):
+    if message is None:
+        message = "Hover over {} button:".format(what)
+    raw_input(message)
+    set_dict[what] = map(int, mouse.position()) # temporary mac fix
+    print("{0} initialized at: {1}".format(what, set_dict[what]))
+
+
 def create_setting():
     """
     Create setting dict by prompting user to hover mouse over
@@ -47,23 +55,18 @@ def create_setting():
     """
     mouse = PyMouse()
     setting_dict = {}
-    print(("Initializing buttons:\n"
-           "Hover mouse over required button and press enter."))
-    raw_input("Hover over reroll button:")
-    setting_dict["reroll"] = mouse.position()
-    print "reroll initialized at: ", setting_dict["reroll"]
-    raw_input("Hover over recall button:")
-    setting_dict["recall"] = mouse.position()
-    print "recall initialized at: ", setting_dict["recall"]
-    raw_input("Hover over store button:")
-    setting_dict["store"] = mouse.position()
-    print "store initialized at: ", setting_dict["store"]
+    print("Initializing buttons:")
+    print("Hover mouse over required button and press enter.")
+    add_to_dict(mouse, setting_dict, "reroll")
+    add_to_dict(mouse, setting_dict, "recall")
+    add_to_dict(mouse, setting_dict, "store")
+ 
     raw_input("Hover over top left corner of total roll number:")
     top_left = mouse.position()
     raw_input("Hover over bottom right corner of total roll number:")
     bottom_right = mouse.position()
-    setting_dict["total_roll"] = top_left + bottom_right
-    print "total roll coordinates initialized at: ", setting_dict["total_roll"]
+    setting_dict["total_roll"] = map(int, top_left + bottom_right)
+    print("total roll coordinates initialized at: {}".format(setting_dict["total_roll"]))
     print("done!")
     return(setting_dict)
 
@@ -151,15 +154,18 @@ def repeats(buttons, number=100, delay=0.1, lang="bgee2", verbose=False):
     printv("FINISHED\nHighest roll: {0}".format(maximum), verbose)
 
 
-def training_images(buttons, number=100, delay=0.1, lang="bgee2"):
+def training_images(buttons, number=100, delay=0.1, lang="bgee2", add_value=True):
+    value = ""
     mouse = PyMouse()
     make_directory("training_examples")
+    screen_grab(buttons.total_roll)
     for i in range(number):
         click(buttons.reroll, mouse, delay)
         im = screen_grab(buttons.total_roll)
-        value = check_image(im, lang)
+        if add_value:
+            value = "_" + str(check_image(im, lang))
         file_name = os.path.join("training_examples",
-                                 str(i) + "_" + value + ".png")
+                                 str(i) + value + ".png")
         im.save(file_name, "PNG")
 
 
@@ -174,7 +180,7 @@ def parse_args():
             )
         )
     parser.add_argument(
-        "-d", "--delay", required=False, default=0.1, type=int,
+        "-d", "--delay", required=False, default=0.1, type=float,
         help=("Delay after each click. This is required as if no or too"
               " short delay is employed, behaviour starts to be"
               " non-deterministics. Probably some clicks are ignored or done"
@@ -211,6 +217,13 @@ def parse_args():
               )
         )
     parser.add_argument(
+        "--no_value", required=False, default=False, action="store_true",
+        help=("If tesseract cannot read screenshots at all, use this"
+              " option together with \"training\" option to make several"
+              " screenshots without running tesseract."
+              )
+        )
+    parser.add_argument(
         "-l", "--language", required=False, default="bgee2", type=str,
         help=("Language setting for tesseract, basically \"library\" of shapes"
               " that are recognized. By default, bgee2 is used, which is"
@@ -239,11 +252,21 @@ def main():
         setting_dict = read_setting()
         buttons = Buttons(setting_dict)
         if args.training:
-            training_images(buttons, number=args.number,
-            delay=args.delay, lang=args.language)
+            training_images(
+                buttons,
+                number=args.number,
+                delay=args.delay,
+                lang=args.language,
+                add_value=not args.no_value
+                )
         else:
-            repeats(buttons, number=args.number, delay=args.delay,
-                    lang=args.language, verbose=args.verbose)
+            repeats(
+                buttons,
+                number=args.number,
+                delay=args.delay,
+                lang=args.language,
+                verbose=args.verbose
+                )
 
 
 if __name__ == "__main__":
