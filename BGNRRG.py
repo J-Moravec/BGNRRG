@@ -71,7 +71,7 @@ def create_setting():
         message="Hover over bottom right corner of total roll number:"
         )
     
-    setting_dict["total_roll"] =
+    setting_dict["total_roll"] = \
         setting_dict[top_left] + setting_dict[bottom_right]
     print("done!")
     return(setting_dict)
