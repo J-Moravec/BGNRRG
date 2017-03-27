@@ -60,13 +60,19 @@ def create_setting():
     add_to_dict(mouse, setting_dict, "reroll")
     add_to_dict(mouse, setting_dict, "recall")
     add_to_dict(mouse, setting_dict, "store")
- 
-    raw_input("Hover over top left corner of total roll number:")
-    top_left = mouse.position()
-    raw_input("Hover over bottom right corner of total roll number:")
-    bottom_right = mouse.position()
-    setting_dict["total_roll"] = map(int, top_left + bottom_right)
-    print("total roll coordinates initialized at: {}".format(setting_dict["total_roll"]))
+    top_left = "top left corner"
+    bottom_right = "bottom right corner"
+    add_to_dict(
+        mouse, setting_dict, top_left,
+        message="Hover over top left corner of total roll number:"
+        ) 
+    add_to_dict(
+        mouse, setting_dict, bottom_right,
+        message="Hover over bottom right corner of total roll number:"
+        )
+    
+    setting_dict["total_roll"] =
+        setting_dict[top_left] + setting_dict[bottom_right]
     print("done!")
     return(setting_dict)
 
@@ -111,13 +117,13 @@ def screen_grab(box):
     """
     Make screenshot of area specified by box and returns image.
     """
-    im = pyscreenshot.grab(box)
+    im = pyscreenshot.grab(box, childprocess=False)
     return(im)
 
 
 def click(button, mouse, delay=0.1):
     """
-    Perform click on coordinates specific by button and sleeps.
+    Perform click on coordinates specified by button and sleep.
     """
     mouse.click(button[0], button[1], 1)
     time.sleep(delay)
